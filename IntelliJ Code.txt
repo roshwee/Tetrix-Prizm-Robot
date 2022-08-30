@@ -1,0 +1,141 @@
+import java.io.IOException;
+import com.fazecast.jSerialComm.*;
+import java.util.*;
+
+public class Main
+{
+    public static void main(String[] args) throws IOException, InterruptedException
+    {
+        SerialPort sp = SerialPort.getCommPort("COM3");
+        sp.setComPortParameters(9600, 8, 1, 0);
+        sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
+
+        sp.openPort();
+        if (sp.openPort())
+        {
+            System.out.println("Port is open");
+        }
+        else
+        {
+            System.out.println("Port is closed");
+            return;
+        }
+
+
+        /**
+         * THIS IS WHERE YOU CODE
+         */
+
+        Thread.sleep(5000);
+
+        TurnOnLed(sp);
+        Thread.sleep(5000);
+        TurnOffLed(sp);
+        Thread.sleep(5000);
+
+        servoMove(sp,30);
+        servoMove(sp,90);
+        servoMove(sp,120);
+        servoMove(sp,180);
+
+        Thread.sleep(5000);
+
+        MotorMoveForward(sp,50);
+        Thread.sleep(7500);
+
+        MotorMoveBack(sp,50);
+        Thread.sleep(7500);
+
+        MotorMoveLeft(sp,50);
+        Thread.sleep(7500);
+
+        MotorMoveRight(sp,50);
+        Thread.sleep(7500);
+
+
+        Thread.sleep(5000);
+
+
+        /**
+         * STOP CODING HERE
+         */
+
+        Thread.sleep(10000);
+
+        if (sp.closePort())
+        {
+            System.out.println("Port will now be closed");
+        }
+        else
+        {
+            System.out.println("Port remains open");
+        }
+    }
+
+
+    static void TurnOnLed(SerialPort sp) throws IOException, InterruptedException
+    {
+        System.out.println("Led On!");
+        sp.getOutputStream().write(221);
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + 221);
+    }
+
+    static void TurnOffLed(SerialPort sp) throws IOException, InterruptedException
+    {
+        System.out.println("Led Off!");
+        sp.getOutputStream().write(222);
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + 222);
+    }
+
+
+    static void servoMove(SerialPort sp, Integer degree) throws IOException, InterruptedException
+    {
+        Integer num = 201 + (degree / 10);
+        System.out.println("Servo Moves!");
+        sp.getOutputStream().write(num.byteValue());
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + (201 + (degree / 10)));
+        Thread.sleep(3000);
+    }
+
+
+
+    static void MotorMoveForward(SerialPort sp, Integer power) throws IOException, InterruptedException
+    {
+        Integer num = (power / 2);
+        System.out.println("Motor Moves Left!");
+        sp.getOutputStream().write(num.byteValue());
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + num);
+    }
+
+    static void MotorMoveBack(SerialPort sp, Integer power) throws IOException, InterruptedException
+    {
+        Integer num = 50 + (power / 2);
+        System.out.println("Motor Moves Back!");
+        System.out.println(num);
+        sp.getOutputStream().write(num.byteValue());
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + num);
+    }
+
+    static void MotorMoveLeft(SerialPort sp, Integer power) throws IOException, InterruptedException
+    {
+        Integer num = 100 + (power / 2);
+        System.out.println("Motor Moves Right!");
+        sp.getOutputStream().write(num.byteValue());
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + num);
+    }
+
+    static void MotorMoveRight(SerialPort sp, Integer power) throws IOException, InterruptedException
+    {
+        Integer num = 150 + (power / 2);
+        System.out.println("Motor Moves Left!");
+        sp.getOutputStream().write(num.byteValue());
+        sp.getOutputStream().flush();
+        System.out.println("Sent number: " + num);
+    }
+}

@@ -1,0 +1,81 @@
+#include <PRIZM.h>      
+PRIZM prizm;           
+
+void setup() 
+{
+   prizm.PrizmBegin(); 
+   prizm.setServoSpeed(1,50);  
+   Serial.begin(9600);
+   while(!Serial) 
+   {
+     ;
+   }
+}
+
+void loop() 
+{
+   if (Serial.available() > 0) 
+   {
+      byte incomingByte = Serial.read();
+      
+      if (incomingByte != -1) 
+      {
+          int number = incomingByte; 
+          
+          if (number == 221)
+          {
+             prizm.setRedLED(HIGH);  
+          }
+
+          if (number == 222)
+          {
+             prizm.setRedLED(LOW);  
+          }
+          
+          if (number >= 201 && number < 220)
+          {
+             prizm.setServoPosition(1,10*(number-201));  
+             delay(3000); 
+          }
+          
+          if (number >= 0 && number < 50)
+          {
+             prizm.setMotorPower(1,2*number);
+             prizm.setMotorPower(2,-2*number);
+             delay(5000); 
+             prizm.setMotorPower(1,0);
+             prizm.setMotorPower(2,0);
+          }
+
+          if (number >= 50 && number < 100)
+          {
+             prizm.setMotorPower(1,-2*(number-50));
+             prizm.setMotorPower(2,2*(number-50));
+             delay(5000); 
+             prizm.setMotorPower(1,0);
+             prizm.setMotorPower(2,0);
+          }
+          
+          if (number >= 100 && number < 150)
+          {
+             prizm.setMotorPower(1,-2*(number-100));
+             prizm.setMotorPower(2,-2*(number-100));
+             delay(5000); 
+             prizm.setMotorPower(1,0);
+             prizm.setMotorPower(2,0);
+          }
+
+          if (number >= 150 && number < 200)
+          {
+             prizm.setMotorPower(1,2*(number-150));
+             prizm.setMotorPower(2,2*(number-150));
+             delay(5000); 
+             prizm.setMotorPower(1,0);
+             prizm.setMotorPower(2,0);
+          }
+                                               
+        Serial.print("I received: ");
+        Serial.print(incomingByte);
+      }
+   }
+}
