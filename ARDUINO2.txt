@@ -1,0 +1,29 @@
+#include <PRIZM.h>      
+PRIZM prizm;           
+
+void setup() 
+{
+   prizm.PrizmBegin(); 
+}
+
+void loop() 
+{  
+  if (Serial.available() > 0) 
+  {
+     byte incomingByte = Serial.read();
+     prizm.setMotorPower(1,-50);
+     prizm.setMotorPower(2,50);
+     if (incomingByte != -1) 
+     {
+       if(prizm.readSonicSensorCM(2) < 25) 
+       {
+          prizm.setMotorPowers(0,0);   
+       }
+       else
+       {
+          prizm.setMotorPower(1,-50);
+          prizm.setMotorPower(2,50);
+       }     
+     }
+   }
+}
