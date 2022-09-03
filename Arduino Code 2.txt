@@ -4,6 +4,11 @@ PRIZM prizm;
 void setup() 
 {
    prizm.PrizmBegin(); 
+   Serial.begin(9600);
+   while(!Serial) 
+   {
+     ;
+   }
 }
 
 void loop() 
@@ -13,15 +18,15 @@ void loop()
      byte incomingByte = Serial.read();
      if (incomingByte != -1) 
      {
-       if(prizm.readSonicSensorCM(2) < 25) 
-       {
-          prizm.setMotorPowers(0,0);   
-       }
-       else
-       {
-          prizm.setMotorPower(1,-50);
-          prizm.setMotorPower(2,50);
-       }     
+         if(prizm.readSonicSensorCM(2) > 25) 
+         {
+            prizm.setMotorPower(1,-50);
+            prizm.setMotorPower(2,50);
+         }
+         else
+         {
+            prizm.setMotorPowers(0,0);   
+         }  
      }
    }
 }
