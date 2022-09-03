@@ -18,15 +18,15 @@ void loop()
      byte incomingByte = Serial.read();
      if (incomingByte != -1) 
      {
-         if(prizm.readSonicSensorCM(2) > 25) 
-         {
-            prizm.setMotorPower(1,-50);
-            prizm.setMotorPower(2,50);
-         }
-         else
-         {
-            prizm.setMotorPowers(0,0);   
-         }  
+       if(prizm.readSonicSensorCM(2) > 25) 
+       {
+          prizm.setMotorPower(1,-50);
+          prizm.setMotorPower(2,50);
+       }
+       else
+       {
+          prizm.setMotorPowers(0,0);   
+       }  
      }
    }
 }
