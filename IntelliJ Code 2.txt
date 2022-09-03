@@ -2,109 +2,46 @@ import java.io.IOException;
 import com.fazecast.jSerialComm.*;
 import java.util.*;
 
-public class Main2
-{
-    public static void main(String[] args) throws IOException, InterruptedException
-    {
+public class Main2 {
+    public static void main(String[] args) throws IOException, InterruptedException {
         SerialPort sp = SerialPort.getCommPort("COM3");
         sp.setComPortParameters(9600, 8, 1, 0);
         sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
-        if (sp.openPort())
-        {
+        if (sp.openPort()) {
             System.out.println("Port is open");
-        }
-        else
-        {
+        } else {
             System.out.println("Port is closed");
             return;
         }
+        
+        
+        
+        Thread.sleep(1000);
+
+        TurnOnSensor(sp);
+
+        Thread.sleep(100000);
 
 
-        for (Integer i = 0; i < 50; ++i)
-        {
-            sp.getOutputStream().write(i.byteValue());
-            sp.getOutputStream().flush();
-            System.out.println("Sent number: " + i);
-            Thread.sleep(1000);
-        }
 
-
-
-        if (sp.closePort())
-        {
+        if (sp.closePort()) {
             System.out.println("Port will now be closed");
-        }
-        else
-        {
+        } else {
             System.out.println("Port remains open");
         }
     }
 
-
-    static void TurnOnLed(SerialPort sp) throws IOException, InterruptedException
+    static void TurnOnSensor(SerialPort sp) throws IOException, InterruptedException
     {
-        System.out.println("Led On!");
-        sp.getOutputStream().write(221);
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + 221);
+        System.out.println("Sensor On!");
+        for (Integer i = 0; i < 10000; ++i) {
+            sp.getOutputStream().write(225);
+            sp.getOutputStream().flush();
+            System.out.println("Sent number: " + i);
+            Thread.sleep(10);
+        }
+
     }
 
-    static void TurnOffLed(SerialPort sp) throws IOException, InterruptedException
-    {
-        System.out.println("Led Off!");
-        sp.getOutputStream().write(222);
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + 222);
-    }
-
-
-    static void servoMove(SerialPort sp, Integer degree) throws IOException, InterruptedException
-    {
-        Integer num = 201 + (degree / 10);
-        System.out.println("Servo Moves!");
-        sp.getOutputStream().write(num.byteValue());
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + (201 + (degree / 10)));
-        Thread.sleep(3000);
-    }
-
-
-
-    static void MotorMoveForward(SerialPort sp, Integer power) throws IOException, InterruptedException
-    {
-        Integer num = (power / 2);
-        System.out.println("Motor Moves Left!");
-        sp.getOutputStream().write(num.byteValue());
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + num);
-    }
-
-    static void MotorMoveBack(SerialPort sp, Integer power) throws IOException, InterruptedException
-    {
-        Integer num = 50 + (power / 2);
-        System.out.println("Motor Moves Back!");
-        System.out.println(num);
-        sp.getOutputStream().write(num.byteValue());
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + num);
-    }
-
-    static void MotorMoveLeft(SerialPort sp, Integer power) throws IOException, InterruptedException
-    {
-        Integer num = 100 + (power / 2);
-        System.out.println("Motor Moves Right!");
-        sp.getOutputStream().write(num.byteValue());
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + num);
-    }
-
-    static void MotorMoveRight(SerialPort sp, Integer power) throws IOException, InterruptedException
-    {
-        Integer num = 150 + (power / 2);
-        System.out.println("Motor Moves Left!");
-        sp.getOutputStream().write(num.byteValue());
-        sp.getOutputStream().flush();
-        System.out.println("Sent number: " + num);
-    }
 }
