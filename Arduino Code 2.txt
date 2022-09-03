@@ -1,32 +1,43 @@
-#include <PRIZM.h>      
-PRIZM prizm;           
+import java.io.IOException;
+import com.fazecast.jSerialComm.*;
+import java.util.*;
 
-void setup() 
-{
-   prizm.PrizmBegin(); 
-   Serial.begin(9600);
-   while(!Serial) 
-   {
-     ;
-   }
-}
+public class Main2 {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        SerialPort sp = SerialPort.getCommPort("COM3");
+        sp.setComPortParameters(9600, 8, 1, 0);
+        sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
-void loop() 
-{  
-  if (Serial.available() > 0) 
-  {
-     byte incomingByte = Serial.read();
-     if (incomingByte != -1) 
-     {
-       if(prizm.readSonicSensorCM(2) > 25) 
-       {
-          prizm.setMotorPower(1,-50);
-          prizm.setMotorPower(2,50);
-       }
-       else
-       {
-          prizm.setMotorPowers(0,0);   
-       }  
-     }
-   }
+        if (sp.openPort()) {
+            System.out.println("Port is open");
+        } else {
+            System.out.println("Port is closed");
+            return;
+        }
+
+        Thread.sleep(1000);
+
+        TurnOnSensor(sp);
+
+        Thread.sleep(100000);
+
+        if (sp.closePort()) {
+            System.out.println("Port will now be closed");
+        } else {
+            System.out.println("Port remains open");
+        }
+    }
+
+    static void TurnOnSensor(SerialPort sp) throws IOException, InterruptedException
+    {
+        System.out.println("Sensor On!");
+        for (Integer i = 0; i < 1000; ++i) {
+            sp.getOutputStream().write(225);
+            sp.getOutputStream().flush();
+            System.out.println("Sent number: " + i);
+            Thread.sleep(10);
+        }
+
+    }
+
 }
